@@ -41,6 +41,7 @@ public class World {
 						Game.player.setX(xx*16);
 						Game.player.setY(yy*16);
 					}else if(pixelAtual == 0xFFFF0000) {
+						
 						//Instanciar inimigo e adicionar a lista das entities
 						Enemy enemy = new Enemy(xx*16,yy*16,16,16,0,Entity.ENEMY_SPRITE);
 						Game.entities.add(enemy);
