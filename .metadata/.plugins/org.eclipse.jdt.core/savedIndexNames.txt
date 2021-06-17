@@ -1,0 +1,3 @@
+INDEX VERSION 1.131+C:\Users\plataformas\Pictures\DISO\Game_PacXito\.metadata\.plugins\org.eclipse.jdt.core
+2686758782.index
+2710390113.index
