@@ -31,7 +31,7 @@ public class Game extends Canvas implements Runnable,KeyListener,MouseListener,M
 	private boolean isRunning = true;
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 240;
-	public static final int SCALE = 4;
+	public static final int SCALE = 3;
 	
 	private BufferedImage image;
 	
@@ -42,6 +42,9 @@ public class Game extends Canvas implements Runnable,KeyListener,MouseListener,M
 	public static Player player;
 	
 	public UI ui;
+	
+	public static int coin_now = 0;
+	public static int coin_count = 0;
 	
 	public Game(){
 		addKeyListener(this);

@@ -41,14 +41,14 @@ public class World {
 						Game.player.setX(xx*16);
 						Game.player.setY(yy*16);
 					}else if(pixelAtual == 0xFFFF0000) {
-						
-						//Instanciar inimigo e adicionar a lista das entities
-						Enemy enemy = new Enemy(xx*16,yy*16,16,16,0,Entity.ENEMY_SPRITE);
+						//enemy
+						Enemy enemy = new Enemy(xx*16,yy*16,16,16,1,Entity.ENEMY_SPRITE);
 						Game.entities.add(enemy);
 					}else if(pixelAtual == 0xFFFFD800) {
 						//coin
 						Coin coin = new Coin(xx*16,yy*16,16,16,0,Entity.COIN_SPRITE);
 						Game.entities.add(coin);
+						Game.coin_count++;
 					}else if(pixelAtual == 0xFFFF00DC) {
 						//power
 						Power power = new Power(xx*16,yy*16,16,16,0,Entity.POWER_SPRITE);

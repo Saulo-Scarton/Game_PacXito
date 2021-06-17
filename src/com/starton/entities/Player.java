@@ -35,6 +35,27 @@ public class Player extends Entity{
 		else if(down && World.isFree(this.getX(),(int)(y+speed))){
 			y+=speed;
 		}
+		
+		catchCoin();
+		
+		if(Game.coin_now == Game.coin_count) {
+			//Win
+			
+		}
+		
+	}
+	
+	public void catchCoin() {
+		for(int i = 0; i < Game.entities.size(); i++) {
+			Entity current = Game.entities.get(i);
+			if(current instanceof Coin) {
+				if(Entity.isColidding(this,current)) {
+					Game.entities.remove(i);
+					Game.coin_now++;
+					return;
+				}
+			}
+		}
 	}
 	
 	public void render(Graphics g) {
