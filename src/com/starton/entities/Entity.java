@@ -15,9 +15,10 @@ import com.starton.world.World;
 
 public class Entity {
 	
-	public static BufferedImage COIN_SPRITE = Game.spritesheet.getSprite(0, 16, 16, 16);
+	public static BufferedImage COIN_SPRITE = Game.spritesheet.getSprite(112, 0, 16, 16);
 	public static BufferedImage POWER_SPRITE = Game.spritesheet.getSprite(16, 16, 16, 16);
 	public static BufferedImage ENEMY_SPRITE = Game.spritesheet.getSprite(32, 32, 16, 16);
+	public static BufferedImage ENEMY_FEAR = Game.spritesheet.getSprite(32, 32, 16, 16);
 	
 	protected double x;
 	protected double y;

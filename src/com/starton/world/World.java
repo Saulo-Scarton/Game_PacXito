@@ -3,11 +3,13 @@ package com.starton.world;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import com.starton.entities.Coin;
 import com.starton.entities.Enemy;
 import com.starton.entities.Entity;
+import com.starton.entities.Player;
 import com.starton.entities.Power;
 import com.starton.main.Game;
 
@@ -82,7 +84,12 @@ public class World {
 	}
 	
 	public static void restartGame(String level){
-		new Game();
+		Game.player = new Player(0,0,16,16,2,Game.spritesheet.getSprite(32, 0,16,16));
+		Game.entities.clear(); //limpa entities
+		Game.entities.add(Game.player);
+		Game.coin_now = 0;
+		Game.coin_count = 0;
+		Game.world = new World("/" + level); //World precisa ser carregado depois do spritesheet
 		return;
 	}
 	

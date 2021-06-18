@@ -103,7 +103,9 @@ public class Game extends Canvas implements Runnable,KeyListener,MouseListener,M
 			e.tick();
 		}
 
-		
+		if(coin_now == coin_count) {
+			World.restartGame("level1.png");
+		}
 		
 	}
 	

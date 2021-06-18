@@ -37,12 +37,6 @@ public class Player extends Entity{
 		}
 		
 		catchCoin();
-		
-		if(Game.coin_now == Game.coin_count) {
-			//Win
-			
-		}
-		
 	}
 	
 	public void catchCoin() {
