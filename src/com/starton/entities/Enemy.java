@@ -15,7 +15,7 @@ public class Enemy extends Entity{
 	
 	public boolean enemyFearMode = false;
 	public int enemyFrames = 0;
-	public int nextTime = Entity.rand.nextInt(60*5 - 60*3) + 60*3;
+	public int nextTime = /*Entity.rand.nextInt(60*5 - 60*3) + 60*3*/ 120;
 	private BufferedImage[] sprites;
 	public String enemyDirection;
 	
@@ -44,8 +44,10 @@ public class Enemy extends Entity{
 				
 			}
 			
-			if(new Random().nextInt(100) < 100)
+			if(new Random().nextInt(100) < 100) {
 				followPath(path);
+			}
+				
 			
 			if(x % 16 == 0 && y % 16 == 0) {
 				if(new Random().nextInt(100) < 55) {
@@ -54,30 +56,70 @@ public class Enemy extends Entity{
 					path = AStar.findPath(Game.world, start, end);
 					
 					if(start.x == end.x) {
-						System.out.println("atack");
+						//System.out.println("atack");
 					}else if(start.x < end.x){
-						System.out.println("right");
+						//System.out.println("right");
 						enemyDirection = "right";
 					}else if(start.x > end.x) {
-						System.out.println("left");
+						//System.out.println("left");
 						enemyDirection = "left";
 					}
 					
 					if(start.y < end.y){
-						System.out.println("down");
+						//System.out.println("down");
 						enemyDirection = "down";
 					}else if(start.y > end.y) {
-						System.out.println("up");
+						//System.out.println("up");
 						enemyDirection = "up";
 					}
+				}
+			}
+			
+			
+		}else {
+			if(path == null || path.size() == 0) {
+				Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+				Vector2i end = new Vector2i(((int)(Game.player.x/16)),((int)(Game.player.y/16)));
+				path = AStar.findPath(Game.world, start, end);
+				
+			}
+			
+			if(new Random().nextInt(100) < 100) {
+				followPath(path);
+			}
+				
+			
+			if(x % 16 == 0 && y % 16 == 0) {
+				if(new Random().nextInt(100) < 55) {
+					Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+					Vector2i end = new Vector2i(((int)(Game.player.x/16)),((int)(Game.player.y/16)));
+					path = AStar.findPath(Game.world, start, end);
 					
+					if(start.x == end.x) {
+						//System.out.println("atack");
+					}else if(start.x < end.x){
+						//System.out.println("right");
+						enemyDirection = "right";
+					}else if(start.x > end.x) {
+						//System.out.println("left");
+						enemyDirection = "left";
+					}
+					
+					if(start.y < end.y){
+						//System.out.println("down");
+						enemyDirection = "down";
+					}else if(start.y > end.y) {
+						//System.out.println("up");
+						enemyDirection = "up";
+					}
 				}
 			}
 		}
 			enemyFrames++;
+			//System.out.println(enemyFrames);
 			if(enemyFrames == nextTime) {
 				//nextTime = Entity.rand.nextInt(60*5 - 60*3) + 60*3;
-				nextTime = 60*2;
+				nextTime = 120;
 				enemyFrames = 0;
 				if(!enemyFearMode) {
 					enemyFearMode = true;
@@ -85,6 +127,8 @@ public class Enemy extends Entity{
 					enemyFearMode = false;
 				}
 			}
+			
+			
 
 				
 			

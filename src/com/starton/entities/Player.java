@@ -10,7 +10,8 @@ import com.starton.world.World;
 public class Player extends Entity{
 	
 	public boolean right,up,left,down;
-
+	public String playerNow;
+	
 	public BufferedImage sprite_left, sprite_right, sprite_up, sprite_down;
 	
 	public Player(int x, int y, int width, int height,double speed,BufferedImage sprite) {
@@ -24,7 +25,7 @@ public class Player extends Entity{
 	public void tick(){
 		depth = 1;
 		if(right && World.isFree((int)(x+speed),this.getY())) {
-			x+=speed;	
+			x+=speed;
 		}
 		else if(left && World.isFree((int)(x-speed),this.getY())) {
 			x-=speed;
@@ -37,6 +38,44 @@ public class Player extends Entity{
 		}
 		
 		catchCoin();
+		
+		if(this.getX()+8 < Game.WIDTH/2 && this.getY()+8 < Game.HEIGHT/2) {
+			//UP LEFT
+			//System.out.println("UP LEFT");
+			playerNow = "UP LEFT";
+		}else if(this.getX()+8 > Game.WIDTH/2 && this.getY()+8 < Game.HEIGHT/2){
+			//UP RIGHT
+			//System.out.println("UP RIGHT");
+			playerNow = "UP RIGHT";
+		}else if(this.getX()+8 < Game.WIDTH/2 && this.getY()+8 > Game.HEIGHT/2){
+			//DOWN LEFT
+			//System.out.println("DOWN LEFT");
+			playerNow = "DOWN LEFT";
+		}else if(this.getX()+8 > Game.WIDTH/2 && this.getY()+8 > Game.HEIGHT/2){
+			//DOWN RIGHT
+			//System.out.println("DOWN RIGHT");
+			playerNow = "DOWN RIGHT";
+		}else if(this.getX()+8 == Game.WIDTH/2 && this.getY()+8 < Game.HEIGHT/2){
+			//UP
+			//System.out.println("UP");
+			playerNow = "UP";
+		}else if(this.getX()+8 < Game.WIDTH/2 && this.getY()+8 == Game.HEIGHT/2){
+			//LEFT
+			//System.out.println("LEFT");
+			playerNow = "LEFT";
+		}else if(this.getX()+8 > Game.WIDTH/2 && this.getY()+8 == Game.HEIGHT/2){
+			//RIGHT
+			//System.out.println("RIGHT");
+			playerNow = "RIGHT";
+		}else if(this.getX()+8 == Game.WIDTH/2 && this.getY()+8 > Game.HEIGHT/2){
+			//DOWN
+			//System.out.println("DOWN");
+			playerNow = "DOWN";
+		}else {
+			System.out.println("CENTER");
+		}
+			
+		
 	}
 	
 	public void catchCoin() {
@@ -51,6 +90,8 @@ public class Player extends Entity{
 			}
 		}
 	}
+	
+	
 	
 	public void render(Graphics g) {
 		if(left){
