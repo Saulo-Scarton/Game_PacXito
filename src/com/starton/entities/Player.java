@@ -13,6 +13,7 @@ public class Player extends Entity{
 	public String playerNow;
 	
 	public BufferedImage sprite_left, sprite_right, sprite_up, sprite_down;
+	public static int enemyFearX, enemyFearY;
 	
 	public Player(int x, int y, int width, int height,double speed,BufferedImage sprite) {
 		super(x, y, width, height,speed,sprite);
@@ -24,6 +25,7 @@ public class Player extends Entity{
 	
 	public void tick(){
 		depth = 1;
+		//System.out.println(x + " " + y);
 		if(right && World.isFree((int)(x+speed),this.getY())) {
 			x+=speed;
 		}
@@ -38,41 +40,42 @@ public class Player extends Entity{
 		}
 		
 		catchCoin();
+		catchPower();
 		
 		if(this.getX()+8 < Game.WIDTH/2 && this.getY()+8 < Game.HEIGHT/2) {
 			//UP LEFT
 			//System.out.println("UP LEFT");
-			playerNow = "UP LEFT";
+			enemyFearX = Game.WIDTH/16 -2;
+			enemyFearY = Game.HEIGHT/16 -2;
 		}else if(this.getX()+8 > Game.WIDTH/2 && this.getY()+8 < Game.HEIGHT/2){
 			//UP RIGHT
 			//System.out.println("UP RIGHT");
-			playerNow = "UP RIGHT";
+			enemyFearX = 1;
+			enemyFearY = Game.HEIGHT/16 -2;
 		}else if(this.getX()+8 < Game.WIDTH/2 && this.getY()+8 > Game.HEIGHT/2){
 			//DOWN LEFT
 			//System.out.println("DOWN LEFT");
-			playerNow = "DOWN LEFT";
+			enemyFearX = Game.HEIGHT/16 -2;
+			enemyFearY = 1;
 		}else if(this.getX()+8 > Game.WIDTH/2 && this.getY()+8 > Game.HEIGHT/2){
 			//DOWN RIGHT
 			//System.out.println("DOWN RIGHT");
-			playerNow = "DOWN RIGHT";
+			enemyFearX = 1;
+			enemyFearY = 1;
 		}else if(this.getX()+8 == Game.WIDTH/2 && this.getY()+8 < Game.HEIGHT/2){
 			//UP
 			//System.out.println("UP");
-			playerNow = "UP";
 		}else if(this.getX()+8 < Game.WIDTH/2 && this.getY()+8 == Game.HEIGHT/2){
 			//LEFT
 			//System.out.println("LEFT");
-			playerNow = "LEFT";
 		}else if(this.getX()+8 > Game.WIDTH/2 && this.getY()+8 == Game.HEIGHT/2){
 			//RIGHT
 			//System.out.println("RIGHT");
-			playerNow = "RIGHT";
 		}else if(this.getX()+8 == Game.WIDTH/2 && this.getY()+8 > Game.HEIGHT/2){
 			//DOWN
 			//System.out.println("DOWN");
-			playerNow = "DOWN";
 		}else {
-			System.out.println("CENTER");
+			//System.out.println("CENTER");
 		}
 			
 		
@@ -90,6 +93,21 @@ public class Player extends Entity{
 			}
 		}
 	}
+	
+	public void catchPower() {
+		for(int i = 0; i < Game.entities.size(); i++) {
+			Entity current = Game.entities.get(i);
+			if(current instanceof Power) {
+				if(Entity.isColidding(this,current)) {
+					Game.entities.remove(i);
+					Enemy.enemyState = "Fear";
+					return;
+				}
+			}
+		}
+	}
+	
+
 	
 	
 	

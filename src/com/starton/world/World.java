@@ -84,7 +84,7 @@ public class World {
 	}
 	
 	public static void restartGame(String level){
-		Game.player = new Player(0,0,16,16,2,Game.spritesheet.getSprite(32, 0,16,16));
+		Game.player = new Player(0,0,16,16,1,Game.spritesheet.getSprite(32, 0,16,16));
 		Game.entities.clear(); //limpa entities
 		Game.entities.add(Game.player);
 		Game.coin_now = 0;
