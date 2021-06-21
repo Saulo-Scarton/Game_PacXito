@@ -44,8 +44,9 @@ public class World {
 						Game.player.setY(yy*16);
 					}else if(pixelAtual == 0xFFFF0000) {
 						//enemy
-						Enemy enemy = new Enemy(xx*16,yy*16,16,16,1,Entity.ENEMY_SPRITE);
+						Enemy enemy = new Enemy(xx*16,yy*16,16,16,Entity.ENEMY_SPRITE);
 						Game.entities.add(enemy);
+						Game.enemies.add(enemy);
 					}else if(pixelAtual == 0xFFFFD800) {
 						//coin
 						Coin coin = new Coin(xx*16,yy*16,16,16,0,Entity.COIN_SPRITE);

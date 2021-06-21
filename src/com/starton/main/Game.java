@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.JFrame;
 
-
+import com.starton.entities.Enemy;
 import com.starton.entities.Entity;
 import com.starton.entities.Player;
 import com.starton.graficos.Spritesheet;
@@ -37,6 +37,7 @@ public class Game extends Canvas implements Runnable,KeyListener,MouseListener,M
 	
 
 	public static List<Entity> entities;
+	public static List<Enemy> enemies;
 	public static Spritesheet spritesheet;
 	public static World world;
 	public static Player player;
@@ -56,8 +57,9 @@ public class Game extends Canvas implements Runnable,KeyListener,MouseListener,M
 		
 		//Inicializando objetos.
 		spritesheet = new Spritesheet("/spritesheet.png");
-		player = new Player(0,0,16,16,1,spritesheet.getSprite(32, 0,16,16));
+		player = new Player(0,0,16,16,2,spritesheet.getSprite(32, 0,16,16));
 		entities = new ArrayList<Entity>();
+		enemies = new ArrayList<Enemy>();
 		world = new World("/level1.png");
 		ui = new UI();
 		
