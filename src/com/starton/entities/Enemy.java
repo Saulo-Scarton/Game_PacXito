@@ -1,34 +1,27 @@
 package com.starton.entities;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.starton.main.Game;
-import com.starton.main.Sound;
 import com.starton.world.AStar;
 import com.starton.world.Camera;
 import com.starton.world.Vector2i;
-import com.starton.world.World;
+
+
 
 public class Enemy extends Entity{
 	
-	//private double speed = 0.1;
-	
-	private int frames = 0,maxFrames = 17 /*max frames para reduzir a velocidade da animação do inimigo*/,index = 0,maxIndex = 1;
-	
-	private BufferedImage[] sprites;
-	
-	private int count = 0, maxCount = 300;
-	//private int life = 10, ChanceOfWalk = 80;
 	public static String enemyState = "Normal";
+	public static boolean enemyFearMode = false;
+	public int enemyFrames = 0;
+	public int nextTime = /*Entity.rand.nextInt(60*5 - 60*3) + 60*3*/ 300;
+	private BufferedImage[] sprites;
+	public String enemyDirection;
 	
-	public boolean fear = false, dead = false;
-	private int damageFrames = 10, damageCurrent = 0;
-	
-	public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
-		super(x, y, width, height,2,sprite);
+	public Enemy(int x, int y, int width, int height,int speed, BufferedImage sprite) {
+		super(x, y, width, height,speed,sprite);
 		sprites = new BufferedImage[12];
 		//normal
 		sprites[0] = Game.spritesheet.getSprite(48, 32, 16, 16);
@@ -47,128 +40,218 @@ public class Enemy extends Entity{
 		sprites[11] = Game.spritesheet.getSprite(96, 64, 16, 16);
 	}
 
-	
-	public void tick() {
-		//Algoritimo de perseguição 2 (A*)
+	public void tick(){
 		depth = 0;
-		if(!fear) {
-			if(!isColiddingWithPlayer()) {
-				if(path == null || path.size() == 0) {
-					Vector2i start = new Vector2i((int)(x/16),(int)(y/16));
-					Vector2i end = new Vector2i((int)(Game.player.x/16),(int)(Game.player.y/16));
-					path = AStar.findPath(Game.world, start, end);
-				}
-				followPath(path);
-				if(x % 16 == 0 && y % 16 == 0) {
-					Vector2i start = new Vector2i((int)(x/16),(int)(y/16));
-					Vector2i end = new Vector2i((int)(Game.player.x/16),(int)(Game.player.y/16));
-					path = AStar.findPath(Game.world, start, end);
-
-				}
-			}else{
-				System.out.println("GAME OVER");
-				fear = true;
+		catchEnemy();
+		if(enemyState == "Normal") {
+			if(path == null || path.size() == 0) {
+				Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+				Vector2i end = new Vector2i(((int)(Game.player.x/16)),((int)(Game.player.y/16)));
+				path = AStar.findPath(Game.world, start, end);
+				
 			}
-		}else {
+			
+			if(new Random().nextInt(100) < 100) {
+				followPath(path);
+			}
+				
+			
+			if(x % 16 == 0 && y % 16 == 0) {
+				if(new Random().nextInt(100) < 100) {
+					Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+					Vector2i end = new Vector2i(((int)(Game.player.x/16)),((int)(Game.player.y/16)));
+					path = AStar.findPath(Game.world, start, end);
+					System.out.println(end.x + " " + end.y);
+					if(start.x == end.x) {
+						//System.out.println("atack");
+					}else if(start.x < end.x){
+						//System.out.println("right");
+						enemyDirection = "right";
+					}else if(start.x > end.x) {
+						//System.out.println("left");
+						enemyDirection = "left";
+					}
+					
+					if(start.y < end.y){
+						//System.out.println("down");
+						enemyDirection = "down";
+					}else if(start.y > end.y) {
+						//System.out.println("up");
+						enemyDirection = "up";
+					}
+				}
+			}
+			
+			
+		}else if(enemyState == "Fear"){
+			//System.out.println(enemyFrames);
+
 			if(path == null || path.size() == 0) {
 				Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
 				Vector2i end = new Vector2i(Player.enemyFearX,Player.enemyFearY);
 				path = AStar.findPath(Game.world, start, end);
+				
 			}
-			followPath(path);
+			
+			if(new Random().nextInt(100) < 100) {
+				followPath(path);
+			}
+				
+			
 			if(x % 16 == 0 && y % 16 == 0) {
 				if(new Random().nextInt(100) < 55) {
 					Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+					//Vector2i end = new Vector2i(((int)(Game.player.x/16)),((int)(Game.player.y/16)));
 					Vector2i end = new Vector2i(Player.enemyFearX,Player.enemyFearY);
+					//System.out.println(end.x + " " + end.y);
 					path = AStar.findPath(Game.world, start, end);
 					
 					if(start.x == end.x) {
 						//System.out.println("atack");
 					}else if(start.x < end.x){
 						//System.out.println("right");
-						//enemyDirection = "right";
+						enemyDirection = "right";
 					}else if(start.x > end.x) {
 						//System.out.println("left");
-						//enemyDirection = "left";
+						enemyDirection = "left";
 					}
 					
 					if(start.y < end.y){
 						//System.out.println("down");
-						//enemyDirection = "down";
+						enemyDirection = "down";
 					}else if(start.y > end.y) {
 						//System.out.println("up");
-						//enemyDirection = "up";
+						enemyDirection = "up";
 					}
 				}
 			}
-			
-			count++;
-			if(count == maxCount) {
-				fear = false;
-				count = 0;
-			}else {
-				//isDamaged = true;
-				System.out.println(count);
-			}
-			
-		}
-		
-		
-		
-		if(dead) {
-				if(path == null || path.size() == 0) {
-					Vector2i start = new Vector2i((int)(x/16),(int)(y/16));
-					Vector2i end = new Vector2i((Game.WIDTH/2)/16,(Game.HEIGHT/2)/16);
-					path = AStar.findPath(Game.world, start, end);
-				}
+			enemyFrames++;
+			if(enemyFrames == nextTime) {
 				
+				//nextTime = Entity.rand.nextInt(60*5 - 60*3) + 60*3;
+				nextTime = 300;
+				enemyFrames = 0;
+				if(enemyState == "Normal") {
+					enemyState = "Fear";
+				}else {
+					enemyState = "Normal";
+				}
+			}
+		}else if(enemyState == "Dead"){
+			//System.out.println(enemyFrames);
+
+			if(path == null || path.size() == 0) {
+				Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+				Vector2i end = new Vector2i((Game.WIDTH/2)/16,(Game.HEIGHT/2)/16);
+				path = AStar.findPath(Game.world, start, end);
+				
+			}
+			
+			if(new Random().nextInt(100) < 100) {
 				followPath(path);
-				if(x % 16 == 0 && y % 16 == 0) {
-					Vector2i start = new Vector2i((int)(x/16),(int)(y/16));
+			}
+				
+			
+			if(x % 16 == 0 && y % 16 == 0) {
+				if(new Random().nextInt(100) < 55) {
+					Vector2i start = new Vector2i(((int)(x/16)),((int)(y/16)));
+					//Vector2i end = new Vector2i(((int)(Game.player.x/16)),((int)(Game.player.y/16)));
 					Vector2i end = new Vector2i((Game.WIDTH/2)/16,(Game.HEIGHT/2)/16);
+					//System.out.println(end.x + " " + end.y);
 					path = AStar.findPath(Game.world, start, end);
-					frames++;
-					if(frames == maxFrames) {
-						frames = 0;
-						index++;
-						if(index > maxIndex) {
-							index = 0;
-						}
+					
+					if(start.x == end.x) {
+						//System.out.println("atack");
+					}else if(start.x < end.x){
+						//System.out.println("right");
+						enemyDirection = "right";
+					}else if(start.x > end.x) {
+						//System.out.println("left");
+						enemyDirection = "left";
+					}
+					
+					if(start.y < end.y){
+						//System.out.println("down");
+						enemyDirection = "down";
+					}else if(start.y > end.y) {
+						//System.out.println("up");
+						enemyDirection = "up";
 					}
 				}
-			count++;
-			if(count == maxCount) {
-				dead = false;
-				count = 0;
-			}else {
-				//isDamaged = true;
-				System.out.println(count);
+			}
+			enemyFrames++;
+			if(enemyFrames == nextTime) {
+				
+				//nextTime = Entity.rand.nextInt(60*5 - 60*3) + 60*3;
+				nextTime = 600;
+				enemyFrames = 0;
+				if(enemyState == "Normal") {
+					enemyState = "Fear";
+				}else {
+					enemyState = "Normal";
+				}
 			}
 		}
+	}
+	
+	public void catchEnemy() {
+		for(int i = 0; i < Game.entities.size(); i++) {
+			Entity current = Game.entities.get(i);
+			if(current instanceof Player) {
+				if(Entity.isColidding(this,current)) {
+					if(Enemy.enemyState == "Fear") {
+						//Game.entities.remove(this);
+						enemyState = "Dead";
+					}else if (Enemy.enemyState == "Normal") {
+						System.out.println("GAME OVER");
+					}
+					return;
+				}
+			}
+		}
+	}
 
-		
-
+	
+	public void render(Graphics g) {
+		if(enemyState == "Normal") {
+			if(enemyDirection == "left") {
+				g.drawImage(sprites[0], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "right") {
+				g.drawImage(sprites[1], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "up") {
+				g.drawImage(sprites[2], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "down") {
+				g.drawImage(sprites[3], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else {
+				super.render(g);
+			}	
+		}else if(enemyState == "Fear"){
+			if(enemyDirection == "left") {
+				g.drawImage(sprites[4], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "right") {
+				g.drawImage(sprites[5], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "up") {
+				g.drawImage(sprites[6], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "down") {
+				g.drawImage(sprites[7], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else {
+				super.render(g);
+			}	
+		}else if(enemyState == "Dead"){
+			if(enemyDirection == "left") {
+				g.drawImage(sprites[8], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "right") {
+				g.drawImage(sprites[9], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "up") {
+				g.drawImage(sprites[10], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else if(enemyDirection == "down") {
+				g.drawImage(sprites[11], this.getX() - Camera.x,this.getY() - Camera.y,null);
+			}else {
+				super.render(g);
+			}	
+		}
+			
 	}
 	
-	public void destroySelf() {
-		Game.enemies.remove(this);
-		Game.entities.remove(this);
-	}
-	
-	public boolean isColiddingWithPlayer() { //testa colisão do inimigo com o player
-		Rectangle enemyCurrent = new Rectangle(this.getX(),this.getY(),16,16);
-		Rectangle player = new Rectangle(Game.player.getX(),Game.player.getY(),16,16);
-		
-		return enemyCurrent.intersects(player);
-	}
-	
-
-	
-	public void render(Graphics g) { //trocar o tamanho da mascara (para colidirem com o tamanho correto)
-		if(!fear)
-			g.drawImage(sprites[index], this.getX() - Camera.x,this.getY() - Camera.y,null);
-		else
-			g.drawImage(sprites[8], this.getX() - Camera.x,this.getY() - Camera.y,null);
-	}
 	
 }
